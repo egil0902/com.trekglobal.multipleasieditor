@@ -256,9 +256,19 @@ public class WPAttributeMultipleEditor extends WEditor implements ContextMenuLis
 				useNormalEditor = true;
 			}
 			
-			if (!useNormalEditor) {
-				if (gridField.getGridTab() != null && MMovementLine.Table_Name.equals(gridField.getGridTab().getTableName()))
+			if (!useNormalEditor && gridField.getGridTab() != null && MMovementLine.Table_Name.equals(gridField.getGridTab().getTableName())) {
+				if (gridField.getColumnName().equals(MMovementLine.COLUMNNAME_M_AttributeSetInstanceTo_ID)) {
+					useNormalEditor = true;
+				} else {
+					int locFrom = -1;
+					if (gridField.getGridTab().getValue(MMovementLine.COLUMNNAME_M_Locator_ID) != null)
+						locFrom = (Integer) gridField.getGridTab().getValue(MMovementLine.COLUMNNAME_M_Locator_ID);
+					int locTo = -1;
+					if (gridField.getGridTab().getValue(MMovementLine.COLUMNNAME_M_LocatorTo_ID) != null)
+						locTo = (Integer) gridField.getGridTab().getValue(MMovementLine.COLUMNNAME_M_LocatorTo_ID);
+					if (locFrom == locTo) // inventory move changing from non-ASI to ASI - or changing ASI
 						useNormalEditor = true;
+				}
 			}
 
 			if (useNormalEditor || M_AttributeSetInstance_ID != 0) {
