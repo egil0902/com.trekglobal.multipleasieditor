@@ -78,7 +78,7 @@ public class WPAttributeMultipleEditor extends WEditor implements ContextMenuLis
 	private GridTab m_GridTab;
 
 	/**	No Instance Key					*/
-	private static Integer		NO_INSTANCE = new Integer(0);
+	private static Integer		NO_INSTANCE = Integer.valueOf(0);
 
 	public WPAttributeMultipleEditor(GridTab gridTab, GridField gridField)
 	{
@@ -365,7 +365,7 @@ public class WPAttributeMultipleEditor extends WEditor implements ContextMenuLis
 		if (M_AttributeSetInstance_ID == 0)
 			setValue(null);
 		else
-			setValue(new Integer(M_AttributeSetInstance_ID));
+			setValue(Integer.valueOf(M_AttributeSetInstance_ID));
 
 		ValueChangeEvent vce = new ValueChangeEvent(this, gridField.getColumnName(), new Object(), getValue());
 		fireValueChange(vce);

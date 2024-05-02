@@ -17,6 +17,7 @@
 package com.trekglobal.MultipleASIEditor.editor;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
@@ -54,7 +55,7 @@ import org.adempiere.webui.event.DialogEvents;
 import org.adempiere.webui.session.SessionManager;
 import org.adempiere.webui.theme.ThemeManager;
 import org.adempiere.webui.util.ZKUpdateUtil;
-import org.adempiere.webui.window.FDialog;
+import org.adempiere.webui.window.Dialog;
 import org.adempiere.webui.window.WPAttributeInstance;
 import org.compiere.model.GridTab;
 import org.compiere.model.I_C_Activity;
@@ -353,13 +354,13 @@ public class WPAttributeMultipleDialog extends Window implements EventListener<E
 		//	Product has no Attribute Set
 		if (as == null)		
 		{
-			FDialog.error(m_WindowNo, this, "PAttributeNoAttributeSet");
+			Dialog.error(m_WindowNo, "PAttributeNoAttributeSet");
 			return false;
 		}
 		//	Product has no Instance Attributes
 		if (!m_productWindow && !as.isInstanceAttribute())
 		{
-			FDialog.error(m_WindowNo, this, "PAttributeNoInstanceAttribute");
+			Dialog.error(m_WindowNo, "PAttributeNoInstanceAttribute");
 			return false;
 		}
 
@@ -538,7 +539,7 @@ public class WPAttributeMultipleDialog extends Window implements EventListener<E
 
 		if (m_row == 0)
 		{
-			FDialog.error(m_WindowNo, this, "PAttributeNoInfo");
+			Dialog.error(m_WindowNo, "PAttributeNoInfo");
 			return false;
 		}
 
@@ -1624,7 +1625,7 @@ public class WPAttributeMultipleDialog extends Window implements EventListener<E
 					mandatory += " - " + attributes[i].getName();
 				//setMAttributeInstance doesn't work without decimal point
 				if (value != null && value.scale() == 0)
-					value = value.setScale(1, BigDecimal.ROUND_HALF_UP);
+					value = value.setScale(1, RoundingMode.HALF_UP);
 				attributes[i].setMAttributeInstance(m_M_AttributeSetInstance_ID, value);
 			}
 			else
@@ -1649,7 +1650,7 @@ public class WPAttributeMultipleDialog extends Window implements EventListener<E
 		//
 		if (mandatory.length() > 0)
 		{
-			FDialog.error(m_WindowNo, this, "FillMandatory", mandatory);
+			Dialog.error(m_WindowNo, "FillMandatory", mandatory);
 			return false;
 		}
 		return true;
