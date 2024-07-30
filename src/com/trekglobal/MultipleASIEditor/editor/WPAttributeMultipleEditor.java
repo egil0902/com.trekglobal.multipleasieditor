@@ -250,11 +250,13 @@ public class WPAttributeMultipleEditor extends WEditor implements ContextMenuLis
 				}
 			}
 			// multiple editor just used if the attribute set is a serial
-			MProduct product = MProduct.get(Env.getCtx(), M_Product_ID);
+			
+			//Modificación para que el componente sea llamado sin importar si tiene o no Serial en el conjunto de atributos
+			/*MProduct product = MProduct.get(Env.getCtx(), M_Product_ID);
 			MAttributeSet as = product.getAttributeSet();
 			if (as != null && ! as.isSerNo()) {
 				useNormalEditor = true;
-			}
+			}*/
 			
 			if (!useNormalEditor && gridField.getGridTab() != null && MMovementLine.Table_Name.equals(gridField.getGridTab().getTableName())) {
 				if (gridField.getColumnName().equals(MMovementLine.COLUMNNAME_M_AttributeSetInstanceTo_ID)) {
