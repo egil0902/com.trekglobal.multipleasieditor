@@ -348,7 +348,8 @@ public class WPAttributeMultipleEditor extends WEditor implements ContextMenuLis
 		BigDecimal qty;
 		Object obj = null;
 		String tableName = gridTab.getTableName();
-		if (   MInOutLine.Table_Name.equals(tableName)
+		//Modification to use QtyEntered instead the native qty column of the table
+		/*if (   MInOutLine.Table_Name.equals(tableName)
 			|| MMovementLine.Table_Name.equals(tableName)) {
 			obj = gridTab.getValue("MovementQty");
 		} else if (MInventoryLine.Table_Name.equals(tableName)) {
@@ -360,8 +361,29 @@ public class WPAttributeMultipleEditor extends WEditor implements ContextMenuLis
 			} else {
 				obj = gridTab.getValue("QtyUsed");
 			}
+		}*/
+		if (   MInOutLine.Table_Name.equals(tableName)
+			|| MMovementLine.Table_Name.equals(tableName)) {
+			if(gridTab.getValue("QtyEntered")!=null)
+				obj = gridTab.getValue("QtyEntered");	
+			else
+				obj = gridTab.getValue("MovementQty");
+		} else if (MInventoryLine.Table_Name.equals(tableName)) {
+			if(gridTab.getValue("QtyEntered")!=null)
+				obj = gridTab.getValue("QtyEntered");	
+			else
+				obj = gridTab.getValue("QtyInternalUse"); // just for internal use, not cost adjustment or physical inventory
+		} else if (MProductionLine.Table_Name.equals(tableName)) {
+			Object isEndProduct = gridTab.getValue("IsEndProduct");
+			if(gridTab.getValue("QtyEntered")!=null)
+				obj = gridTab.getValue("QtyEntered");	
+			else
+				if (isEndProduct instanceof Boolean && (Boolean) isEndProduct) {
+					obj = gridTab.getValue("MovementQty");
+				} else {
+					obj = gridTab.getValue("QtyUsed");
+				}
 		}
-
 		if (obj != null && obj instanceof BigDecimal) {
 			qty = (BigDecimal) obj;
 		} else {
