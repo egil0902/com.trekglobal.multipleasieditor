@@ -1274,6 +1274,7 @@ public class WPAttributeMultipleDialog extends Window implements EventListener<E
 		else
 			one = Env.ONE;
 		m_gridTab.setValue(m_columnName, m_ASIs.get(0).getM_AttributeSetInstance_ID());
+		//Modification to use QtyEntered instead the native qty column of the table
 		if (   MInOutLine.Table_Name.equals(tableName)
 			|| MMovementLine.Table_Name.equals(tableName)) {
 			m_gridTab.setValue("MovementQty", one);
@@ -1288,11 +1289,19 @@ public class WPAttributeMultipleDialog extends Window implements EventListener<E
 			}
 			m_gridTab.setValue("PlannedQty", one);
 		}
+		//Modification to use QtyEntered instead the native qty column of the table
+		if(m_gridTab.getValue("QtyEntered")!=null)
+			m_gridTab.setValue("QtyEntered", one);
+		
 		if (MInOutLine.Table_Name.equals(tableName)) {
 			m_gridTab.setValue("QtyEntered", one);
 			MProduct product = MProduct.get(m_ctx, m_M_Product_ID);
-			if (product != null)
-				m_gridTab.setValue("C_UOM_ID", product.getC_UOM_ID());
+			if (product != null) {
+				//Modification to not reset uom to the product main unit
+				if(product.getC_UOM_ID()==(Integer)m_gridTab.getValue("C_UOM_ID"))
+					m_gridTab.setValue("C_UOM_ID", product.getC_UOM_ID());
+			}
+				
 		}
 		m_gridTab.dataSave(true);
 
