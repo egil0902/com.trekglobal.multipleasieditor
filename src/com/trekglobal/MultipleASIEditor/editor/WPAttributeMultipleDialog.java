@@ -1275,7 +1275,7 @@ public class WPAttributeMultipleDialog extends Window implements EventListener<E
 			one = Env.ONE;
 		m_gridTab.setValue(m_columnName, m_ASIs.get(0).getM_AttributeSetInstance_ID());
 		//Modification to use QtyEntered instead the native qty column of the table
-		if (   MInOutLine.Table_Name.equals(tableName)
+		/*if (   MInOutLine.Table_Name.equals(tableName)
 			|| MMovementLine.Table_Name.equals(tableName)) {
 			m_gridTab.setValue("MovementQty", one);
 		} else if (MInventoryLine.Table_Name.equals(tableName)) {
@@ -1288,21 +1288,39 @@ public class WPAttributeMultipleDialog extends Window implements EventListener<E
 				m_gridTab.setValue("QtyUsed", one);
 			}
 			m_gridTab.setValue("PlannedQty", one);
-		}
-		//Modification to use QtyEntered instead the native qty column of the table
-		if(m_gridTab.getValue("QtyEntered")!=null)
-			m_gridTab.setValue("QtyEntered", one);
-		
-		if (MInOutLine.Table_Name.equals(tableName)) {
-			m_gridTab.setValue("QtyEntered", one);
-			MProduct product = MProduct.get(m_ctx, m_M_Product_ID);
-			if (product != null) {
-				//Modification to not reset uom to the product main unit
-				if(product.getC_UOM_ID()==(Integer)m_gridTab.getValue("C_UOM_ID"))
-					m_gridTab.setValue("C_UOM_ID", product.getC_UOM_ID());
+		}*/
+		if (   MInOutLine.Table_Name.equals(tableName)
+				|| MMovementLine.Table_Name.equals(tableName)) {
+			if(m_gridTab.getValue("QtyEntered")!=null)
+				m_gridTab.setValue("QtyEntered", one);
+			else
+				m_gridTab.setValue("MovementQty", one);
+			} else if (MInventoryLine.Table_Name.equals(tableName)) {
+				if(m_gridTab.getValue("QtyEntered")!=null)
+					m_gridTab.setValue("QtyEntered", one);
+				else
+					m_gridTab.setValue("QtyInternalUse", one); // just for internal use, not cost adjustment or physical inventory
+			} else if (MProductionLine.Table_Name.equals(tableName)) {
+				Object isEndProduct = m_gridTab.getValue("IsEndProduct");
+				if(m_gridTab.getValue("QtyEntered")!=null)
+					m_gridTab.setValue("QtyEntered", one);
+				else
+					if (isEndProduct instanceof Boolean && (Boolean) isEndProduct) {
+						m_gridTab.setValue("MovementQty", one);
+					} else {
+						m_gridTab.setValue("QtyUsed", one);
+					}
+				m_gridTab.setValue("PlannedQty", one);
+			}		
+			if (MInOutLine.Table_Name.equals(tableName)) {
+				m_gridTab.setValue("QtyEntered", one);
+				MProduct product = MProduct.get(m_ctx, m_M_Product_ID);
+				if (product != null) {
+					//Modification to not reset uom to the product main unit
+					if(product.getC_UOM_ID()==(Integer)m_gridTab.getValue("C_UOM_ID"))
+						m_gridTab.setValue("C_UOM_ID", product.getC_UOM_ID());
+				}				
 			}
-				
-		}
 		m_gridTab.dataSave(true);
 
 		PO po = null;
